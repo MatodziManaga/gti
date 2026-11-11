@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Adventure Escape</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="navbar">
+  <a class="logo" href="home.html">🟧 ADVENTURE<span> ESCAPE</span></a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="activities.html">Activities</a>
+    <a href="fees.html">Calculate Fees</a>
+    <a class="active" href="contact.html">Contact</a>
+  </nav>
+  <a class="btn btn-small" href="activities.html">Explore Now</a>
+</header>
+
+<main>
+  <section class="page-hero">
+    <span class="eyebrow">LET'S PLAN SOMETHING AMAZING</span>
+    <h1>Begin Your Conversation</h1>
+    <p>Have a question or ready for your next adventure? We would love to hear from you.</p>
+  </section>
+
+  <section class="section contact-layout">
+    <div class="contact-info">
+      <span class="eyebrow">GET IN TOUCH</span>
+      <h2>Let's Make It Happen</h2>
+      <p>Tell us what kind of experience you're looking for.
+      Our team can help you plan your next outdoor escape.</p>
+
+      <div class="contact-detail">
+        <span class="detail-icon">✉</span>
+        <div><h3>Email</h3><p>hello@adventureescape.com</p></div>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-icon">📍</span>
+        <div><h3>Location</h3><p>Johannesburg, South Africa</p></div>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-icon">🕒</span>
+        <div><h3>Office Hours</h3><p>Monday – Friday, 09:00–17:00</p></div>
+      </div>
+
+      <div class="contact-photo"></div>
+    </div>
+
+    <form class="contact-form" id="contactForm">
+      <h2>Send Us a Message</h2>
+      <p>Complete the form below to prepare your enquiry.</p>
+
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+      <label for="phone">Phone number (optional)</label>
+      <input type="tel" id="phone" name="phone" placeholder="+27">
+
+      <label for="interest">Adventure of interest</label>
+      <select id="interest" name="interest" required>
+        <option value="">Select an adventure</option>
+        <option>Mountain Trail Trek</option>
+        <option>Wilderness Camping</option>
+        <option>Andes Valley Trek</option>
+        <option>Scenic Nature Escape</option>
+        <option>Wildlife Discovery</option>
+        <option>River & Valley Adventure</option>
+        <option>General enquiry</option>
+      </select>
+
+      <div id="bookingDetails" class="booking-details" hidden></div>
+
+      <label for="message">Your message</label>
+      <textarea id="message" name="message" rows="5"
+        placeholder="Tell us about your plans, preferred dates or questions..."
+        required></textarea>
+
+      <button type="submit" class="btn btn-block">Prepare My Enquiry →</button>
+      <p class="small-note">This demonstration prepares an email for you to send.</p>
+    </form>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><a class="logo" href="home.html">🟧 ADVENTURE ESCAPE</a><p>Explore more. Leave less behind.</p></div>
+    <div><h4>Explore</h4><a href="home.html">Home</a><a href="about.html">About</a></div>
+    <div><h4>Adventures</h4><a href="activities.html">Activities</a><a href="fees.html">Calculate Fees</a></div>
+    <div><h4>Contact</h4><p>hello@adventureescape.com</p><p>South Africa</p></div>
+  </div>
+  <p class="copyright">© 2026 Adventure Escape. Travel with purpose.</p>
+</footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const activityParam = params.get("activity");
+  const dateParam = params.get("date");
+  const peopleParam = params.get("people");
+  const totalParam = params.get("total");
+
+  const interest = document.getElementById("interest");
+  const bookingDetails = document.getElementById("bookingDetails");
+  const message = document.getElementById("message");
+
+  if (activityParam || dateParam || peopleParam || totalParam) {
+    if (activityParam) {
+      const option = [...interest.options].find(item =>
+        item.textContent.includes(activityParam.split(" — ")[0])
+      );
+      if (option) interest.value = option.value;
+    }
+
+    const details = [
+      activityParam ? "Adventure: " + activityParam : "",
+      dateParam ? "Preferred date: " + dateParam : "",
+      peopleParam ? "Number of adventurers: " + peopleParam : "",
+      totalParam ? "Estimated total: " + totalParam : ""
+    ].filter(Boolean);
+
+    bookingDetails.hidden = false;
+    bookingDetails.textContent = "Your trip details: " + details.join(" | ");
+    message.value = details.join("\n") + "\n\n";
+  }
+
+  document.getElementById("contactForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const adventure = interest.value;
+    const messageText = message.value.trim();
+
+    const subject = "Adventure Enquiry - " + adventure;
+    const body = [
+      "Name: " + name,
+      "Email: " + email,
+      "Phone: " + (phone || "Not provided"),
+      "Adventure: " + adventure,
+      "",
+      messageText
+    ].join("\n");
+
+    const mailto = "mailto:hello@adventureescape.com"
+      + "?subject=" + encodeURIComponent(subject)
+      + "&body=" + encodeURIComponent(body);
+
+    window.location.href = mailto;
+  });
+</script>
+</body>
+</html>
