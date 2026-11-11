@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<script src="script.js"></script>
+</body>
+</html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Fees | Adventure Escape</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="navbar">
+  <a class="logo" href="home.html">🟧 ADVENTURE<span> ESCAPE</span></a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="activities.html">Activities</a>
+    <a class="active" href="fees.html">Calculate Fees</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a class="btn btn-small" href="contact.html">Get in Touch</a>
+</header>
+
+<main>
+  <section class="about-hero fees-hero">
+    <span class="eyebrow">PLAN YOUR NEXT ESCAPE</span>
+    <h1>Calculate Your Adventure Fees</h1>
+    <p>Customise your trip, choose your activities and estimate your
+    total adventure cost before getting in touch with our team.</p>
+  </section>
+
+  <section class="section calculator-section">
+    <div class="calculator-layout">
+      <form class="calculator-form" id="feeForm">
+        <span class="eyebrow">YOUR TRIP DETAILS</span>
+        <h2>1. Booking Specifications</h2>
+
+        <label for="activity">Select an adventure</label>
+        <select id="activity" required>
+          <option value="450">Mountain Trail Trek — R450/person</option>
+          <option value="850">Wilderness Camping — R850/person</option>
+          <option value="1500">Andes Valley Trek — R1,500/person</option>
+          <option value="350">Scenic Nature Escape — R350/person</option>
+          <option value="550">Wildlife Discovery — R550/person</option>
+          <option value="700">River & Valley Adventure — R700/person</option>
+        </select>
+
+        <label for="tripDate">Preferred trip date</label>
+        <input type="date" id="tripDate" required>
+
+        <label for="people">Number of adventurers</label>
+        <div class="number-control">
+          <button type="button" id="minus" aria-label="Remove one person">−</button>
+          <input type="number" id="people" value="1" min="1" max="30" required>
+          <button type="button" id="plus" aria-label="Add one person">+</button>
+        </div>
+
+        <fieldset>
+          <legend>2. Optional Extras</legend>
+          <label class="check-row">
+            <input type="checkbox" id="equipment" value="150">
+            <span>Adventure equipment rental (+R150/person)</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="meal" value="120">
+            <span>Meal package (+R120/person)</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="transport" value="250">
+            <span>Transport package (+R250/person)</span>
+          </label>
+        </fieldset>
+
+        <button class="btn btn-block" type="submit">Calculate My Fees →</button>
+      </form>
+
+      <aside class="price-card">
+        <span class="eyebrow">YOUR ESTIMATE</span>
+        <h2>Trip Summary</h2>
+        <div class="price-line"><span>Adventure</span><strong id="summaryActivity">R450</strong></div>
+        <div class="price-line"><span>Adventurers</span><strong id="summaryPeople">1 person</strong></div>
+        <div class="price-line"><span>Extras per person</span><strong id="summaryExtras">R0</strong></div>
+        <div class="price-line"><span>Booking fee (5%)</span><strong id="summaryBooking">R22.50</strong></div>
+        <hr>
+        <p class="total-label">Estimated Total</p>
+        <p class="total-price" id="total">R472.50</p>
+        <p class="small-note">This is an estimate, not a confirmed booking.</p>
+        <button class="btn btn-block" id="bookingButton" type="button">Continue to Contact →</button>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><a class="logo" href="home.html">🟧 ADVENTURE ESCAPE</a><p>Explore more. Leave less behind.</p></div>
+    <div><h4>Explore</h4><a href="home.html">Home</a><a href="activities.html">Activities</a></div>
+    <div><h4>Information</h4><a href="about.html">About Us</a><a href="contact.html">Contact</a></div>
+    <div><h4>Contact</h4><p>hello@adventureescape.com</p></div>
+  </div>
+  <p class="copyright">© 2026 Adventure Escape. Travel with purpose.</p>
+</footer>
+
+<script>
+  const activity = document.getElementById("activity");
+  const people = document.getElementById("people");
+  const equipment = document.getElementById("equipment");
+  const meal = document.getElementById("meal");
+  const transport = document.getElementById("transport");
+
+  const money = amount => "R" + amount.toLocaleString("en-ZA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  function calculateFees() {
+    let count = Math.max(1, Math.min(30, Number(people.value) || 1));
+    people.value = count;
+
+    const base = Number(activity.value);
+    const extras = (equipment.checked ? 150 : 0)
+                 + (meal.checked ? 120 : 0)
+                 + (transport.checked ? 250 : 0);
+
+    const subtotal = (base + extras) * count;
+    const booking = subtotal * 0.05;
+    const total = subtotal + booking;
+
+    document.getElementById("summaryActivity").textContent =
+      money(base * count);
+    document.getElementById("summaryPeople").textContent =
+      count + (count === 1 ? " person" : " people");
+    document.getElementById("summaryExtras").textContent =
+      money(extras * count);
+    document.getElementById("summaryBooking").textContent =
+      money(booking);
+    document.getElementById("total").textContent = money(total);
+  }
+
+  document.getElementById("minus").addEventListener("click", () => {
+    people.value = Math.max(1, Number(people.value || 1) - 1);
+    calculateFees();
+  });
+
+  document.getElementById("plus").addEventListener("click", () => {
+    people.value = Math.min(30, Number(people.value || 1) + 1);
+    calculateFees();
+  });
+
+  [activity, people, equipment, meal, transport].forEach(element => {
+    element.addEventListener("input", calculateFees);
+    element.addEventListener("change", calculateFees);
+  });
+
+  document.getElementById("feeForm").addEventListener("submit", event => {
+    event.preventDefault();
+    calculateFees();
+    alert("Your estimated fees have been updated. You can now continue to contact us.");
+  });
+
+  document.getElementById("bookingButton").addEventListener("click", () => {
+    const date = document.getElementById("tripDate").value;
+    if (!date) {
+      alert("Please select your preferred trip date first.");
+      document.getElementById("tripDate").focus();
+      return;
+    }
+
+    const details = new URLSearchParams({
+      activity: activity.options[activity.selectedIndex].text,
+      date: date,
+      people: people.value,
+      total: document.getElementById("total").textContent
+    });
+
+    window.location.href = "contact.html?" + details.toString();
+  });
+
+  // Set the earliest selectable date to today.
+  const dateInput = document.getElementById("tripDate");
+  const today = new Date();
+  dateInput.min = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0")
+  ].join("-");
+
+  calculateFees();
+</script>
+</body>
+</html>
